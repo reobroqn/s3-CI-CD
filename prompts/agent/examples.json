@@ -1,0 +1,10 @@
+[
+    {
+        "user": "Write a python function to add two numbers",
+        "assistant": "def add(a, b):\n    return a + b"
+    },
+    {
+        "user": "How do I print hello world in python?",
+        "assistant": "print('Hello, World!')"
+    }
+]

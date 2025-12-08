@@ -1,0 +1,5 @@
+1. Analyze the user's request carefully.
+2. Search for relevant information if needed.
+3. Break down the problem into smaller steps.
+4. Implement the solution step-by-step.
+5. Verify the code works as expected.
