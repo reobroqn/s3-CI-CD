@@ -1,7 +1,8 @@
-import boto3
-import os
 import glob
 import mimetypes
+import os
+
+import boto3
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 
@@ -14,20 +15,21 @@ s3_client = boto3.client(
     "s3",
 )
 
+
 def upload_prompts(directory="prompts"):
     """Recursively upload prompt files to S3."""
     print(f"Uploading prompts from '{directory}' to bucket '{S3_BUCKET}'...")
-    
+
     files = glob.glob(f"{directory}/**/*", recursive=True)
-    
+
     for file_path in files:
         if os.path.isfile(file_path):
             # Convert Windows path to S3 key (forward slashes)
             s3_key = file_path.replace("\\", "/")
-            
+
             content_type, _ = mimetypes.guess_type(file_path)
             content_type = content_type or "text/plain"
-            
+
             try:
                 print(f"Uploading {s3_key}...")
                 with open(file_path, "rb") as f:
@@ -38,12 +40,13 @@ def upload_prompts(directory="prompts"):
                         ContentType=content_type,
                         Metadata={
                             "version": "1.1.1",
-                            "description": "Updated by CI/CD pipeline"
-                        }
+                            "description": "Updated by CI/CD pipeline",
+                        },
                     )
                 print(f"✓ Uploaded {s3_key}")
             except ClientError as e:
                 print(f"✗ Failed to upload {s3_key}: {e}")
+
 
 if __name__ == "__main__":
     if not S3_BUCKET:
