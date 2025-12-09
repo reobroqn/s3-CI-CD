@@ -12,7 +12,48 @@ This project implements a versioned storage system for prompts where:
 
 ## Architecture
 
-![Architecture](https://mermaid.ink/img/pako:eNp1kU1PwzAMhv9K5HML9QMQ4sC0CR_HDo1D4oLaLm1gU5I4K1PV_46TpQuIfUn8et9nO0eyE6WwIkHppfkqGgPPKj0ycncwGO7v7h8eR6O7x8fRWBH_yOAv-P39F_h4_wIeXvByOB7e9-7vj6PhcDAkXqRCa_QG2sIasI_QG1ugQWv0Fjq0Ru8gh9boA2RoDf5ADq3B30ihNXiATGiNvkCW87vSCyWkEdS5kOQ6F4QzIRlXjLPGGq0D7wMXjHChy73ghVBOuJDO-V3phVKCSyG1s1JqTjkrWGeM4VJIZa1kQhlnrRV2zK70QikhDHKurJJKWMYFZ6zT3kqtOOdCMi4445x1TjrnS3CXF-1dPl5_A2FIfT0)
+```mermaid
+graph TD
+    subgraph "GitHub Repository (s3-ci-cd)"
+        A["<br><b>GitHub Actions</b><br>(.github/workflows)"]
+        B["<br><b>Terraform</b><br>(infrastructure/)"]
+        C["<br><b>MCP Server</b><br>(mcp_server/)"]
+        D["<br><b>Prompts</b><br>(prompts/)"]
+        E["<br><b>Scripts</b><br>(scripts/)"]
+        F["<br><b>Tests</b><br>(tests/)"]
+    end
+
+    subgraph "AWS Cloud"
+        G["<br><b>S3 Bucket</b><br>"]
+    end
+
+    subgraph "Developer"
+        H["<br><b>Local Machine</b><br>"]
+    end
+
+    subgraph "Agent"
+        I["<br><b>Agent Environment</b><br>"]
+    end
+
+    H -- "Push to main" --> A
+    A -- "Deploy" --> G
+    B -- "Create/Manage" --> G
+    I -- "Get Prompts" --> C
+    C -- "Read from" --> G
+    H -- "Run Locally" --> E
+    E -- "Interact with" --> G
+    A -- "Run" --> F
+
+    style A fill:#282a36,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style B fill:#282a36,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style C fill:#282a36,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style D fill:#282a36,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style E fill:#282a36,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style F fill:#282a36,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style G fill:#ff9900,stroke:#232F3E,stroke-width:2px,color:#232F3E
+    style H fill:#44475a,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+    style I fill:#44475a,stroke:#f8f8f2,stroke-width:2px,color:#f8f8f2
+```
 
 ## Getting Started
 
