@@ -1,8 +1,9 @@
-import boto3
 import os
-import json
+from typing import Any, Dict, List, Optional
+
+import boto3
 from botocore.exceptions import ClientError
-from typing import Optional, List, Dict, Any
+
 
 class S3Client:
     def __init__(self):
@@ -21,7 +22,7 @@ class S3Client:
             params = {"Bucket": self.bucket_name, "Key": key}
             if version_id:
                 params["VersionId"] = version_id
-            
+
             response = self.s3.get_object(**params)
             return response["Body"].read().decode("utf-8")
         except ClientError as e:
@@ -39,7 +40,9 @@ class S3Client:
             print(f"Error listing prompts: {e}")
             return []
 
-    def get_prompt_by_metadata_version(self, key: str, metadata_version: str) -> Optional[str]:
+    def get_prompt_by_metadata_version(
+        self, key: str, metadata_version: str
+    ) -> Optional[str]:
         """
         Fetch a prompt by metadata version.
         Searches through all versions to find one matching the metadata version.
@@ -48,9 +51,9 @@ class S3Client:
         for version_info in versions:
             try:
                 response = self.s3.get_object(
-                    Bucket=self.bucket_name, 
-                    Key=key, 
-                    VersionId=version_info["VersionId"]
+                    Bucket=self.bucket_name,
+                    Key=key,
+                    VersionId=version_info["VersionId"],
                 )
                 metadata = response.get("Metadata", {})
                 if metadata.get("version") == metadata_version:
@@ -67,11 +70,13 @@ class S3Client:
             if "Versions" in response:
                 for v in response["Versions"]:
                     if v["Key"] == key:
-                        versions.append({
-                            "VersionId": v["VersionId"],
-                            "LastModified": v["LastModified"].isoformat(),
-                            "IsLatest": v["IsLatest"]
-                        })
+                        versions.append(
+                            {
+                                "VersionId": v["VersionId"],
+                                "LastModified": v["LastModified"].isoformat(),
+                                "IsLatest": v["IsLatest"],
+                            }
+                        )
             return versions
         except ClientError as e:
             print(f"Error listing versions for {key}: {e}")
