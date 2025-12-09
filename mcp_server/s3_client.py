@@ -9,9 +9,6 @@ class S3Client:
         self.bucket_name = os.getenv("S3_BUCKET_NAME")
         self.s3 = boto3.client(
             "s3",
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-            region_name=os.getenv("AWS_REGION", "us-east-1")
         )
 
     def get_prompt(self, key: str, version_id: Optional[str] = None) -> Optional[str]:
@@ -41,6 +38,26 @@ class S3Client:
         except ClientError as e:
             print(f"Error listing prompts: {e}")
             return []
+
+    def get_prompt_by_metadata_version(self, key: str, metadata_version: str) -> Optional[str]:
+        """
+        Fetch a prompt by metadata version.
+        Searches through all versions to find one matching the metadata version.
+        """
+        versions = self.list_versions(key)
+        for version_info in versions:
+            try:
+                response = self.s3.get_object(
+                    Bucket=self.bucket_name, 
+                    Key=key, 
+                    VersionId=version_info["VersionId"]
+                )
+                metadata = response.get("Metadata", {})
+                if metadata.get("version") == metadata_version:
+                    return response["Body"].read().decode("utf-8")
+            except ClientError:
+                continue
+        return None
 
     def list_versions(self, key: str) -> List[Dict[str, Any]]:
         """List all versions of a specific prompt."""

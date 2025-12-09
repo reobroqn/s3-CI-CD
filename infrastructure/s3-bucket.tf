@@ -4,7 +4,7 @@ provider "aws" {
 
 variable "aws_region" {
   description = "AWS Region"
-  default     = "us-east-1"
+  default     = "ap-southeast-1"
 }
 
 variable "bucket_name" {

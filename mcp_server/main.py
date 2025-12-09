@@ -1,6 +1,5 @@
 from fastmcp import FastMCP
-from mcp_server.s3_client import S3Client
-import os
+from s3_client import S3Client
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -13,18 +12,25 @@ mcp = FastMCP("S3 Prompts Server")
 s3_client = S3Client()
 
 @mcp.tool
-def get_prompt(key: str, version: str = None) -> str:
+def get_prompt(key: str, version: str = None, metadata_version: str = None) -> str:
     """
     Get a prompt from S3.
     
     Args:
         key: The path to the prompt file in S3 (e.g., 'prompts/agent/system.txt')
-        version: Optional version ID to fetch a specific version
+        version: Optional S3 Version ID to fetch a specific version
+        metadata_version: Optional metadata version (e.g., '1.0.0') to fetch by metadata
     """
-    content = s3_client.get_prompt(key, version)
-    if content is None:
-        return f"Error: Prompt '{key}' not found."
-    return content
+    if metadata_version:
+        content = s3_client.get_prompt_by_metadata_version(key, metadata_version)
+        if content is None:
+            return f"Error: Prompt '{key}' with metadata version '{metadata_version}' not found."
+        return content
+    else:
+        content = s3_client.get_prompt(key, version)
+        if content is None:
+            return f"Error: Prompt '{key}' not found."
+        return content
 
 @mcp.tool
 def list_prompts(prefix: str = "prompts/") -> str:
