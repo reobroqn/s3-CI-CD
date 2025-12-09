@@ -13,9 +13,6 @@ AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 
 s3_client = boto3.client(
     "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-    region_name=AWS_REGION,
 )
 
 
@@ -37,7 +34,14 @@ def upload_prompts(directory="prompts"):
                 print(f"Uploading {s3_key}...")
                 with open(file_path, "rb") as f:
                     s3_client.put_object(
-                        Bucket=S3_BUCKET, Key=s3_key, Body=f, ContentType=content_type
+                        Bucket=S3_BUCKET,
+                        Key=s3_key,
+                        Body=f,
+                        ContentType=content_type,
+                        Metadata={
+                            "version": "1.1.1",
+                            "description": "Updated by CI/CD pipeline",
+                        },
                     )
                 print(f"✓ Uploaded {s3_key}")
             except ClientError as e:
