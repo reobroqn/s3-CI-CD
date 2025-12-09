@@ -68,18 +68,12 @@ Copy the example environment file and fill in your AWS credentials:
 cp .env.example .env
 ```
 
-### 2. Install `uv`
-It is recommended to use `uv` for faster dependency management. Install it with:
+### 2. Install Dependencies
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+pip install -e .
 ```
 
-### 3. Install Dependencies
-```bash
-uv pip install -e .
-```
-
-### 4. Create Infrastructure
+### 3. Create Infrastructure
 This project includes Terraform configuration to simplify S3 setup.
 ```bash
 cd infrastructure
@@ -88,7 +82,7 @@ terraform apply -var="bucket_name=your-unique-bucket-name"
 ```
 *Note: Make sure to update your `.env` file with the created bucket name.*
 
-### 5. Run MCP Server
+### 4. Run MCP Server
 Start the FastMCP server to serve prompts locally:
 ```bash
 fastmcp run mcp_server/main.py
