@@ -1,9 +1,8 @@
-import os
-from typing import Any, Dict, List, Optional
-
 import boto3
+import os
+import json
 from botocore.exceptions import ClientError
-
+from typing import Optional, List, Dict, Any
 
 class S3Client:
     def __init__(self):
@@ -12,7 +11,7 @@ class S3Client:
             "s3",
             aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
             aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-            region_name=os.getenv("AWS_REGION", "us-east-1"),
+            region_name=os.getenv("AWS_REGION", "us-east-1")
         )
 
     def get_prompt(self, key: str, version_id: Optional[str] = None) -> Optional[str]:
@@ -51,13 +50,11 @@ class S3Client:
             if "Versions" in response:
                 for v in response["Versions"]:
                     if v["Key"] == key:
-                        versions.append(
-                            {
-                                "VersionId": v["VersionId"],
-                                "LastModified": v["LastModified"].isoformat(),
-                                "IsLatest": v["IsLatest"],
-                            }
-                        )
+                        versions.append({
+                            "VersionId": v["VersionId"],
+                            "LastModified": v["LastModified"].isoformat(),
+                            "IsLatest": v["IsLatest"]
+                        })
             return versions
         except ClientError as e:
             print(f"Error listing versions for {key}: {e}")

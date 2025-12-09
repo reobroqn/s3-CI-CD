@@ -1,7 +1,7 @@
-from dotenv import load_dotenv
 from fastmcp import FastMCP
-
 from mcp_server.s3_client import S3Client
+import os
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
@@ -11,7 +11,6 @@ mcp = FastMCP("S3 Prompts Server")
 
 # Initialize S3 Client
 s3_client = S3Client()
-
 
 @mcp.tool
 def get_prompt(key: str, version: str = None) -> str:
@@ -27,7 +26,6 @@ def get_prompt(key: str, version: str = None) -> str:
         return f"Error: Prompt '{key}' not found."
     return content
 
-
 @mcp.tool
 def list_prompts(prefix: str = "prompts/") -> str:
     """
@@ -40,7 +38,6 @@ def list_prompts(prefix: str = "prompts/") -> str:
     if not prompts:
         return "No prompts found."
     return "\n".join(prompts)
-
 
 @mcp.tool
 def list_prompt_versions(key: str) -> str:
@@ -60,7 +57,6 @@ def list_prompt_versions(key: str) -> str:
         result.append(f"- {v['VersionId']} | {v['LastModified']}{latest}")
 
     return "\n".join(result)
-
 
 if __name__ == "__main__":
     mcp.run()

@@ -1,16 +1,13 @@
-import glob
-import json
 import os
-
+import json
 import pytest
+import glob
 
 PROMPTS_DIR = "prompts"
-
 
 def test_prompts_directory_exists():
     assert os.path.exists(PROMPTS_DIR)
     assert os.path.isdir(PROMPTS_DIR)
-
 
 def test_json_files_are_valid():
     """Ensure all JSON files in the prompts directory are valid JSON."""
@@ -18,11 +15,10 @@ def test_json_files_are_valid():
 
     for file_path in json_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 json.load(f)
         except json.JSONDecodeError as e:
             pytest.fail(f"Invalid JSON in {file_path}: {e}")
-
 
 def test_required_agent_prompts_exist():
     """Ensure critical agent prompts exist."""
@@ -33,7 +29,6 @@ def test_required_agent_prompts_exist():
         path = os.path.join(agent_dir, filename)
         assert os.path.exists(path), f"Missing required prompt file: {filename}"
 
-
 def test_file_encoding_is_utf8():
     """Ensure all text files are UTF-8 encoded."""
     text_files = glob.glob(f"{PROMPTS_DIR}/**/*.txt", recursive=True)
@@ -41,7 +36,7 @@ def test_file_encoding_is_utf8():
 
     for file_path in text_files:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 f.read()
         except UnicodeDecodeError:
             pytest.fail(f"File {file_path} is not valid UTF-8")
