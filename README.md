@@ -12,7 +12,7 @@ This project implements a versioned storage system for prompts where:
 
 ## Architecture
 
-![Architecture](https://mermaid.ink/img/pako:eNp1kU1PwzAMhv9K5HML9QMQ4sC0CR_HDo1D4oLaLm1gU5I4K1PV_46TpQuIfUn8et9nO0eyE6WwIkHppfkqGgPPKj0ycncwGO7v7h8eR6O7x8fRWBH_yOAv-P39F_h4_wIeXvByOB7e9-7vj6PhcDAkXqRCa_QG2sIasI_QG1ugQWv0Fjq0Ru8gh9boA2RoDf5ADq3B30ihNXiATGiNvkCW87vSCyWkEdS5kOQ6F4QzIRlXjLPGGq0D7wMXjHChy73ghVBOuJDO-V3phVKCSyG1s1JqTjkrWGeM4VJIZa1kQhlnrRV2zK70QikhDHKurJJKWMYFZ6zT3kqtOOdCMi4445x1TjrnS3CXF-1dPl5_A2FIfT0)
+![Architecture](https://mermaid.ink/img/pako:eNptkU1vgzAMhv8K5HcLDXQFxMGBacmHde3QsS12tYFNSeKsTFX_e5KkS3zJ4_f7vvslO5AaKwMkC8srqYp4XujQyNDbPhzu7-4fHl-m4d3z42isSPzIwV_w-_sX-HH_Ah5e8HI4Ht_37u-Po-FwMAwWJ1Khy-ANtIEzYB-hN7ZAh1bohA7t0bvIEVqgD8igNfgDOTQGfyGF1uABMkKL7pDl_K70QglJA6lzQcl1LghnQjKuOGeMNVqH3gcuGOFC13vBC6GccCGd87vSCyWFk0JqZyXVnHJWsMYZwyWh1FoiEnPGWmHH7EovlBBCGOesk0pI44Iz1mlvBVacsxYSc8Y546xz0jlfgrs8au_y8foTCEvqa4A)
 
 ## Getting Started
 
@@ -27,12 +27,18 @@ Copy the example environment file and fill in your AWS credentials:
 cp .env.example .env
 ```
 
-### 2. Install Dependencies
+### 2. Install `uv`
+It is recommended to use `uv` for faster dependency management. Install it with:
 ```bash
-pip install -e .
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### 3. Create Infrastructure
+### 3. Install Dependencies
+```bash
+uv pip install -e .
+```
+
+### 4. Create Infrastructure
 This project includes Terraform configuration to simplify S3 setup.
 ```bash
 cd infrastructure
@@ -41,7 +47,7 @@ terraform apply -var="bucket_name=your-unique-bucket-name"
 ```
 *Note: Make sure to update your `.env` file with the created bucket name.*
 
-### 4. Run MCP Server
+### 5. Run MCP Server
 Start the FastMCP server to serve prompts locally:
 ```bash
 fastmcp run mcp_server/main.py
